@@ -4,18 +4,33 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-public class Main {
+public class CommonWordsFinder {
     private static final ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Common Words Finder");
+        System.out.println("Java Common Words Finder");
 
-        List<String> documents = Arrays.asList(
-                Files.lines(Path.of("res/bible.txt")).reduce((s, s1) -> s + s1)
-                        .orElse("The quick brown fox jumps over the lazy dog."),
-                Files.lines(Path.of("res/world192.txt")).reduce((s, s1) -> s + s1)
-                        .orElse("The quick brown cat jumps over the lazy dog.")
-        );
+        List<String> documents = new ArrayList<>();
+
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.print("Enter file path: ");
+
+            Path path = Path.of(sc.nextLine());
+            if (path.toFile().exists()) {
+                documents.add(Files.lines(path).reduce((s, s1) -> s + s1).orElseThrow());
+            } else {
+                System.out.println("This file does not exist!");
+            }
+
+            System.out.print("Do you want to add one more file (Y / N) ? ");
+        } while (sc.nextLine().equals("Y"));
+
+        if (documents.size() < 2) {
+            System.out.println("You entered less than 2 files.");
+            return;
+        }
+
         Set<String> commonWords = findCommonWords(documents);
         System.out.println("Founded common words: " + commonWords);
     }
