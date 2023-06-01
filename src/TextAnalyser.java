@@ -16,6 +16,8 @@ public class TextAnalyser {
             return;
         }
 
+        long timer = System.currentTimeMillis();
+
         String[] wordList = Files.lines(filePath)
                 .flatMap(line -> Stream.of(line.split("\\W+")))
                 .filter(word -> !word.isBlank())
@@ -23,13 +25,11 @@ public class TextAnalyser {
 
         System.out.println("Word count: " + wordList.length);
 
-//        for (String word : wordList) {
-//            System.out.println(word);
-//        }
-
         double averageLength = calculateAverageWordLength(wordList);
         double variance = calculateVariance(wordList, averageLength);
         double standardDeviation = Math.sqrt(variance);
+
+        System.out.println("Execution time: " + (System.currentTimeMillis() - timer) + "\n");
 
         System.out.println("Average word length: " + averageLength);
         System.out.println("Variance: " + variance);
