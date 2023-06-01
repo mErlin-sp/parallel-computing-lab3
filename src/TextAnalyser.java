@@ -18,6 +18,8 @@ public class TextAnalyser {
             return;
         }
 
+        long timer = System.currentTimeMillis();
+
         String[] wordList = Files.lines(filePath)
                 .flatMap(line -> Stream.of(line.split("\\W+")))
                 .filter(word -> !word.isBlank())
@@ -35,6 +37,8 @@ public class TextAnalyser {
             double average = Arrays.stream(result).mapToDouble(i -> i).average().orElseThrow();
             double variance = Arrays.stream(result).mapToDouble(i -> Math.pow(i - average, 2)).average().orElseThrow();
             double standardDeviation = Math.sqrt(variance);
+
+            System.out.println("Execution time: " + (System.currentTimeMillis() - timer) + "\n");
 
             System.out.println("Average word length: " + Math.round(average * 100.0) / 100.0);
             System.out.println("Variance: " + Math.round(variance * 100.0) / 100.0);
